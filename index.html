@@ -288,8 +288,8 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
         <div class="ps1" aria-hidden="true"><span class="u">usama@infra</span>:<span class="p">~</span>$ <span class="cmd">tail /var/log/impact.log</span></div>
         <div class="out impact">
           <div class="box"><span class="lg dim">aws-spend</span><div class="n">-72%</div><div class="t">$25,000 to $7,000 a month</div></div>
-          <div class="box"><span class="lg dim">release-cycle</span><div class="n">-50%</div><div class="t">after CI/CD rework</div></div>
-          <div class="box"><span class="lg dim">venture-data</span><div class="n">$7,000</div><div class="t">saved per month by right-sizing</div></div>
+          <div class="box"><span class="lg dim">faster-gtm</span><div class="n">-50%</div><div class="t">after CI/CD rework</div></div>
+          <div class="box"><span class="lg dim">cost-saving</span><div class="n">$7,000</div><div class="t">saved per month by right-sizing</div></div>
           <div class="box"><span class="lg dim">gpu-vendors</span><div class="n">10+</div><div class="t">GPU clouds evaluated and shortlisted</div></div>
         </div>
       </section>
@@ -300,7 +300,7 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
           <table aria-label="Roles and how long each ran">
             <thead><tr><th>NAME</th><th>READY</th><th>STATUS</th><th>AGE</th></tr></thead>
             <tbody>
-              <tr><td>stealth-startup</td><td>1/1</td><td class="run">Running</td><td>1m</td></tr>
+              <tr><td>stealth-startup</td><td>1/1</td><td class="run">Running</td><td data-start="2026-10">1m</td></tr>
               <tr><td>alethia-ai</td><td>1/1</td><td class="run">Running</td><td>2y10m</td></tr>
               <tr><td>data-pilot</td><td>1/1</td><td class="cmp">Completed</td><td>2y2m</td></tr>
               <tr><td>venture-data</td><td>1/1</td><td class="cmp">Completed</td><td>2y4m</td></tr>
@@ -580,6 +580,14 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
     var y=Math.floor(months/12),m=months%12;
     up.textContent=y+' years, '+m+' month'+(m===1?'':'s');
   }
+  // AGE for running roles, counted like LinkedIn (the start month counts as month 1)
+  [].forEach.call(document.querySelectorAll('[data-start]'),function(td){
+    var parts=td.getAttribute('data-start').split('-');
+    var n=(now.getFullYear()-(+parts[0]))*12+(now.getMonth()-(+parts[1]-1))+1;
+    if(n<1)return;
+    var y=Math.floor(n/12),m=n%12;
+    td.textContent=(y?y+'y':'')+(m||!y?m+'m':'');
+  });
   // tmux clock in Lahore time
   var clock=document.getElementById('clock');
   function tick(){
