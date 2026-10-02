@@ -56,6 +56,11 @@ p{margin:0}
 .titlebar .ctl i:last-child{background:var(--red);opacity:.85}
 .screen{padding:24px clamp(14px,3vw,32px) 36px;display:grid;gap:44px}
 
+/* keep every grid track shrinkable so long content wraps or scrolls instead of clipping */
+.screen,.jobs,.about,.groups,.yaml,.ls,.conf,.info,.rc .q,.rc .by{grid-template-columns:minmax(0,1fr)}
+.screen > *,.out,.box,.job,.rec,.rc{min-width:0}
+.tbl{max-width:100%}
+
 /* prompt */
 .ps1{font-size:15px;font-weight:700;color:var(--fg);overflow-wrap:anywhere}
 .ps1 .u{color:var(--green)}
@@ -161,7 +166,7 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
 .cursor{display:inline-block;width:.6em;height:1.1em;background:var(--fg);vertical-align:-.2em;margin-left:2px}
 
 @media (max-width:860px){
-  .neo{grid-template-columns:1fr}
+  .neo{grid-template-columns:minmax(0,1fr)}
   .impact{grid-template-columns:repeat(2,minmax(0,1fr))}
   .records{grid-template-columns:1fr}
   .ls .row{grid-template-columns:1fr;gap:0}
@@ -181,6 +186,29 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
   .titlebar{grid-template-columns:1fr auto}
   .titlebar .left{display:none}
   .titlebar .t{text-align:left}
+}
+@media (max-width:860px){
+  .certs,.certs tbody,.certs tr,.certs td{display:block;white-space:normal}
+  .certs tr{padding-block:8px;border-top:1px dashed var(--line)}
+  .certs tr:first-child{border-top:0;padding-top:0}
+  .certs td{padding:0}
+  .certs td:first-child,.certs td:empty{display:none}
+  .certs td.b{font-weight:700}
+}
+@media (max-width:520px){
+  .wrap{padding-inline:10px;padding-block:14px 32px}
+  .screen{padding:18px 12px 28px;gap:36px}
+  .box{padding:18px 12px 14px}
+  .box > .lg.r{position:static;display:block;background:none;padding:0;margin:-4px 0 8px;font-size:12px;max-width:none}
+  .tmux{padding:6px 8px;font-size:12px}
+  .tmux .sess{display:none}
+  .tmux .cd{display:none}
+  .tbl th,.tbl td{padding-right:14px}
+  .tbl table{font-size:13px}
+  .ascii{font-size:11px}
+  .info h1{font-size:30px}
+  .job h3{font-size:16px}
+  .btns{gap:8px}
 }
 @media (prefers-reduced-motion:no-preference){
   .cursor{animation:blink 1.1s steps(1) infinite}
@@ -452,7 +480,7 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
       <section id="certs" aria-labelledby="cred-h">
         <h2 class="ps1" id="cred-h"><span class="u">usama@infra</span>:<span class="p">~</span>$ <span class="cmd">ls -l certs/</span><span style="position:absolute;left:-9999px">Credentials</span></h2>
         <div class="out tbl">
-          <table aria-label="Certifications and education">
+          <table class="certs" aria-label="Certifications and education">
             <tbody>
               <tr><td class="dim">-r--r--r--</td><td class="o">Amazon Web Services</td><td class="dim"></td><td class="b">aws-solutions-architect-associate</td></tr>
               <tr><td class="dim">-r--r--r--</td><td class="o">Microsoft</td><td class="dim"></td><td class="b">azure-fundamentals</td></tr>
@@ -529,7 +557,7 @@ blockquote cite{display:block;margin-top:8px;font-style:normal;color:var(--dim);
   function tick(){
     try{
       var t=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Karachi',hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short',year:'2-digit'}).format(new Date());
-      clock.textContent='"infra" '+t+' PKT';
+      clock.innerHTML='<span class="cd">"infra" '+t.replace(/, (\d\d:\d\d)$/,', </span>$1')+' PKT';
     }catch(e){clock.textContent='"infra"';}
   }
   tick();setInterval(tick,30000);
